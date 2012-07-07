@@ -2,11 +2,12 @@ module Postgrep
   module Searchable
     def self.included(model)
       model.send(:extend, ClassMethods)
+      model.search_indexes = []
+      Postgrep::Migrations.add model
     end
     
     module ClassMethods
       attr_accessor :search_indexes
-      search_indexes = []
       
       def conditions(query)
         conds = search_indexes.map{|idx| "#{idx}_search_index @@ plainto_tsquery(?)" }
