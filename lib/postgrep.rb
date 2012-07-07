@@ -1,5 +1,6 @@
 require "postgrep/version"
+require "postgrep/searchable"
 
-module Postgrep
-  # Your code goes here...
-end
+# module Postgrep
+  
+# end
