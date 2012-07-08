@@ -3,7 +3,6 @@ module Postgrep
     def self.included(model)
       model.send(:extend, ClassMethods)
       model.search_indexes = []
-      Postgrep::Migrations.add model
     end
     
     module ClassMethods
@@ -42,6 +41,7 @@ module Postgrep
           end
         end
       end
+      
     end
   end
 end

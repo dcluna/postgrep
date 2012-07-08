@@ -1,5 +1,5 @@
 module Postgrep
-  class Migrations    
+  class Migrations
     class << self
       def add(searchable)
         @migrations ||= []
@@ -18,15 +18,35 @@ module Postgrep
   
   class Migration
     attr_accessor :up, :down
+    attr_reader :description
     
-    def initialize(searchable, dict=:english)
+    def initialize(searchable, description=nil, dict=:english)
       @up, @down = String.new, String.new
-      @up << searchable.search_indexes.each do |index|
-        up_sql searchable.table_name, index, dict
+      unless searchable.search_indexes.empty?
+        @up << searchable.search_indexes.each do |index|
+          up_sql searchable.storage_name, index, dict
+        end.join("\n")
+        @down << searchable.search_indexes.each do |index|
+          down_sql searchable.storage_name, index
+        end.join("\n")
       end
-      @down << searchable.search_indexes.each do |index|
-        down_sql searchable.table_name, index
-      end
+      @description = description
+    end
+
+    def empty?
+      @up.empty? && @down.empty?
+    end
+
+    def define_migration(number, name)
+      raise EmptyMigration if empty?
+      migration number, name do
+        up do
+          DataMapper.repository.adapter.execute @up
+        end
+        down do
+          DataMapper.repository.adapter.execute @up
+        end
+      end     
     end
     
     private

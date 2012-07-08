@@ -21,6 +21,8 @@ Gem::Specification.new do |s|
   # specify any dependencies here; for example:
   s.add_development_dependency "dm-core"
   s.add_development_dependency "rake"
+  s.add_development_dependency "pry"
   s.add_runtime_dependency "dm-core"
   s.add_runtime_dependency "dm-migrations"
+  s.add_runtime_dependency "dm-postgres-adapter"
 end
